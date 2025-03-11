@@ -1,0 +1,19 @@
+services:
+  nginx:
+    image: ${NGINX_IMAGE:-nginx:latest}
+    container_name: seafile-nginx
+    restart: unless-stopped
+    volumes:
+      - ${NGINX_CONF:-/opt/nginx.conf}:/etc/nginx/nginx.conf
+      - ${NGINX_VOLUME:-/opt/nginx-data}:/var/log/nginx
+    environment:
+      - SEAFILE_SERVER_PROTOCOL={SEAFILE_SERVER_PROTOCOL:-http}
+      - SEAFILE_SERVER_HOSTNAME={SEAFILE_SERVER_HOSTNAME:?Variable is not set or empty}
+    depends_on:
+      - seafile
+    networks:
+      - seafile-net
+
+networks:
+  seafile-net:
+    name: seafile-net
